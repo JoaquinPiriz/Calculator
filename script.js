@@ -1,96 +1,102 @@
 let runningTotal = 0;
 let buffer = "0";
-let previousOperator;
+let previousOperator = null;
 
 const screen = document.querySelector('.screen');
 
-function buttonClick(value){
-    if (isNaN(value)){
-        handleSymbol(value);
-    } else {
-        // Borrar el resultado actual si el usuario presiona un número
-        buffer = ''; // Borrar el resultado actual
+function buttonClick(value) {
+    if (!isNaN(value) || value === ".") {
         handleNumber(value);
+    } else {
+        handleMath(value);
     }
     screen.innerText = buffer;
 }
 
-
-function handleSymbol(symbol){
-    switch(symbol){
-        case 'C':
-            buffer = '0';
-            runningTotal = 0;
-            break;
-        case '=':
-            if (previousOperator === null){
-                return;
-            }
-            flushOperation(parseInt(buffer));
-            previousOperator = null;
-            buffer = runningTotal;
-            runningTotal = 0;
-            break;
-        case '←':
-            if (buffer.length === 1){
-                buffer = '0';
-            } else {
-                buffer = buffer.substring(0, buffer.length - 1);
-            }
-            break;
-        case '+':
-        case '-':
-        case 'x':
-        case '÷':
-            handleMath(symbol);
-            break;
-    }
-}
-
-function handleMath(symbol){
-    if (buffer === '0'){
+function handleMathSubtract() {
+    if (buffer === '0') {
         return;
     }
-
-    const intBuffer = parseInt(buffer);
-
-    if (runningTotal === 0){
-        runningTotal = intBuffer;
+    if (runningTotal === 0) {
+        runningTotal = parseFloat(buffer);
     } else {
-        flushOperation(intBuffer);
+        performOperation(parseFloat(buffer));
     }
+    previousOperator = '-';
     buffer = '0';
-    previousOperator = symbol;
 }
 
-function flushOperation(intBuffer){
-    switch(previousOperator){
-        case '+':
-            runningTotal += intBuffer;
-            break;
-        case '-':
-            runningTotal -= intBuffer;
-            break;
-        case 'x':
-            runningTotal *= intBuffer;
-            break;
-        case '÷':
-            runningTotal /= intBuffer;
-            break;
+function handleMath(symbol) {
+    console.log("Handling math:", symbol);
+    switch (symbol) {
+      case '+':
+      case '-':
+      case '×':
+      case '÷':
+        if (buffer === '0') {
+          return;
+        }
+        if (runningTotal === 0) {
+          runningTotal = parseFloat(buffer);
+        } else {
+          performOperation(parseFloat(buffer));
+        }
+        previousOperator = symbol;
+        buffer = '0';
+        break;
+      case '=':
+        if (previousOperator === null) {
+          return;
+        }
+        performOperation(parseFloat(buffer));
+        previousOperator = null;
+        buffer = runningTotal.toString();
+        runningTotal = 0;
+        break;
+      case 'C':
+        buffer = '0';
+        runningTotal = 0;
+        previousOperator = null;
+        break;
+      case '←':
+        if (buffer.length === 1) {
+          buffer = '0';
+        } else {
+          buffer = buffer.substring(0, buffer.length - 1);
+        }
+        break;
+      case '-':
+        console.log("Handling subtraction");
+        handleMathSubtract();
+        break;
     }
 }
 
-function handleNumber(numberString){
-    if (buffer === '0'){
-        buffer = numberString;
-    } else {
-        buffer += numberString;
+function performOperation(intBuffer) {
+    console.log("Performing operation:", previousOperator, intBuffer);
+    if (previousOperator === '+') {
+        runningTotal += intBuffer;
+    } else if (previousOperator === '-') {
+        runningTotal -= intBuffer;
+    } else if (previousOperator === '×') {
+        runningTotal *= intBuffer;
+    } else if (previousOperator === '÷') {
+        if (intBuffer === 0) {
+            alert("Error ");
+            handleMath('C');
+            return;
+        }
+        runningTotal /= intBuffer;
     }
 }
 
-function init(){
-    document.querySelector('.calc-buttons').addEventListener('click',function(event){
-        buttonClick(event.target.value);
+function handleNumber(numberString) {
+  buffer = numberString;
+}
+
+function init() {
+    document.querySelector('.calc-buttons').addEventListener('click', function(event) {
+        buttonClick(event.target.innerText);
     });
 }
 
