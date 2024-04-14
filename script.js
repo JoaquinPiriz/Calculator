@@ -5,99 +5,90 @@ let previousOperator = null;
 const screen = document.querySelector('.screen');
 
 function buttonClick(value) {
-    if (!isNaN(value) || value === ".") {
+    if (!isNaN(value)){
         handleNumber(value);
-    } else {
-        handleMath(value);
+    }else{
+        handleSymbol(value);
     }
     screen.innerText = buffer;
 }
 
-function handleMathSubtract() {
-    if (buffer === '0') {
+function handleSymbol(symbol){
+  switch(symbol){
+    case 'C':
+      buffer = '0';
+      runningTotal = 0;
+      break;
+    case '=':
+      if (previousOperator === null){
         return;
-    }
-    if (runningTotal === 0) {
-        runningTotal = parseFloat(buffer);
-    } else {
-        performOperation(parseFloat(buffer));
-    }
-    previousOperator = '-';
-    buffer = '0';
-}
-
-function handleMath(symbol) {
-    console.log("Handling math:", symbol);
-    switch (symbol) {
-      case '+':
-      case '-':
-      case '×':
-      case '÷':
-        if (buffer === '0') {
-          return;
-        }
-        if (runningTotal === 0) {
-          runningTotal = parseFloat(buffer);
-        } else {
-          performOperation(parseFloat(buffer));
-        }
-        previousOperator = symbol;
+      }
+      flushOperation(parseInt(buffer));
+      previousOperator = null;
+      buffer = runningTotal;
+      runningTotal = 0;
+      break;
+    case '←':
+      if (buffer.length === 1){
         buffer = '0';
-        break;
-      case '=':
-        if (previousOperator === null) {
-          return;
-        }
-        performOperation(parseFloat(buffer));
-        previousOperator = null;
-        buffer = runningTotal.toString();
-        runningTotal = 0;
-        break;
-      case 'C':
-        buffer = '0';
-        runningTotal = 0;
-        previousOperator = null;
-        break;
-      case '←':
-        if (buffer.length === 1) {
-          buffer = '0';
-        } else {
-          buffer = buffer.substring(0, buffer.length - 1);
-        }
-        break;
-      case '-':
-        console.log("Handling subtraction");
-        handleMathSubtract();
-        break;
-    }
+      }else{
+        buffer = buffer.substring(0, buffer.length - 1);
+      }
+      break;
+    case '+':
+    case '-':
+    case 'x':
+    case '÷':
+      handleMath(symbol);
+      break;
+  }
 }
 
-function performOperation(intBuffer) {
-    console.log("Performing operation:", previousOperator, intBuffer);
-    if (previousOperator === '+') {
-        runningTotal += intBuffer;
-    } else if (previousOperator === '-') {
-        runningTotal -= intBuffer;
-    } else if (previousOperator === '×') {
-        runningTotal *= intBuffer;
-    } else if (previousOperator === '÷') {
-        if (intBuffer === 0) {
-            alert("Error ");
-            handleMath('C');
-            return;
-        }
-        runningTotal /= intBuffer;
-    }
+
+function handleMath(symbol){
+  if(buffer === '0'){
+    return;
+  }
+
+  const intBuffer = parseInt(buffer);
+
+  if(runningTotal === 0){
+    runningTotal = intBuffer;
+  } else if (previousOperator !== symbol) {
+    flushOperation(intBuffer);
+  }
+
+  previousOperator = symbol;
+  buffer = '0';
 }
 
-function handleNumber(numberString) {
-  buffer = numberString;
+function flushOperation(intBuffer){
+  if(previousOperator === '+'){
+    runningTotal += intBuffer;
+  }else if(previousOperator === '-'){
+    runningTotal -= intBuffer;
+  }else if(previousOperator === 'x'){
+    runningTotal *= intBuffer;
+  }else if(previousOperator === '÷'){
+    runningTotal /= intBuffer;
+  }
 }
 
-function init() {
-    document.querySelector('.calc-buttons').addEventListener('click', function(event) {
-        buttonClick(event.target.innerText);
+function handleNumber(numberString){
+  if(buffer === "0"){
+    buffer = numberString;
+  }else{
+    buffer += numberString;
+  }
+}
+
+function init(){
+  const buttons = document.querySelectorAll('.calc-button');
+  buttons.forEach(function(button) {
+    button.addEventListener('click', function() {
+      buttonClick(this.innerText);
     });
+  });
 }
 
 init();

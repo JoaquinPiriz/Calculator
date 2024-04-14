@@ -1,11 +1,11 @@
-html{
+html {
     box-sizing: border-box;
     height: 100%;
 }
 
 *,
 *:before,
-*::after{
+*::after {
     box-sizing: inherit;
     margin: 0;
     padding: 0;
@@ -13,7 +13,6 @@ html{
 
 body {
     align-items: center;
-    background: linear-gradient(320deg, #e93f94, #aca71b, #147763);
     display: flex;
     font-family: 'Dosis', sans-serif;
     height: inherit;
@@ -26,17 +25,14 @@ body {
     border-radius: 16px;
     box-shadow: 0 4px 30px rgba(35, 35, 35, 0.1);
     color: #232323;
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    background: rgba(255, 255, 255, 0.30);
-    border: 1px solid rgba(255, 255, 255, 0.34);
+    background: rgba(158, 14, 14, 0.3);
+    border: 1px solid rgba(187, 6, 6, 0.3);
     flex-basis: 400px;
     height: 540px;
     padding: 20px 35px;
-
 }
 
-.screen{
+.screen {
     backdrop-filter: blur(5.5px);
     -webkit-backdrop-filter: blur(5.5px);
     background: rgba(255, 255, 255, 0.75);
@@ -51,13 +47,13 @@ body {
     width: 326px;
 }
 
-.calc-button-row{
+.calc-button-row {
     display: flex;
     justify-content: space-between;
     margin: 5% 0;
 }
 
-.calc-button{
+.calc-button {
     backdrop-filter: blur(5.5px);
     -webkit-backdrop-filter: blur(5.5px);
     background: rgba(255, 255, 255, 0.75);
@@ -71,34 +67,28 @@ body {
     height: 65px;
 }
 
-.calc-button:last-child{
-    backdrop-filter: blur(5.5px);
-    -webkit-backdrop-filter: blur(5.5px);
-    background: rgba(255, 255, 255, 0.75);
-    border: 1px solid rgba(35, 35, 35, 0.1);
-    border-radius: 16px;
-    box-shadow: 0 4px 30px rgba(35, 35, 35, 0.1);
+.calc-button:last-child {
     color: #fff;
-    background: #e55b25;
+    background: #000000;
 }
 
-.calc-button:last-child:hover{
+.calc-button:last-child:hover {
     background-color: inherit;
     color: inherit;
 }
 
-.calc-button:hover{
+.calc-button:hover {
     background-color: inherit;
 }
 
-.calc-button:active{
+.calc-button:active {
     background-color: #a99714;
 }
 
-.double{
+.double {
     flex-basis: 47%;
 }
 
-.triple{
+.triple {
     flex-basis: 73%;
 }
